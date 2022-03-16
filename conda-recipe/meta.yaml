@@ -1,0 +1,35 @@
+package:
+  name: "crystfelexporter"
+  version: "1.0.0"
+
+source:
+  path: ../
+
+
+requirements:
+  host:
+    - python {{ python }}
+    - setuptools
+
+  run:
+    - joblib>=1.0.1
+    - matplotlib>=3.3.2
+    - numpy>=1.19.2
+    - pandas>=1.1.3
+    - pip>=20.2.4
+    - python
+    - scikit-learn>=0.23.2
+    - scipy>=1.5.2
+    - tqdm>=4.51.0
+    - h5py>=3.2.1
+    - bitshuffle>=0.4.1
+
+about:
+  home: "https://github.com/pagasparo/crystfelexporter"
+  license: AGPLv3
+  license_family: AGPL
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - pgasparo

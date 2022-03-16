@@ -1,0 +1,12 @@
+name: crystfelexporter-docs
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - pip:
+    - numpy==1.19.2
+    - h5py==3.2.1
+    - networkx==2.5
+    - furo
+    - einops==0.3.0
+    - tqdm
