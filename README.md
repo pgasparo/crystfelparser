@@ -36,7 +36,11 @@ docker run -it crystfelparser bash
 
 ## Quick start
 
-Bla bla.
+Usage is simple, just specify an input stream and (optional) an output file.
+
+```bash
+python crystfelparser.py --stream ../tutorials/example.stream
+```
 
 ## Tutorials
 
