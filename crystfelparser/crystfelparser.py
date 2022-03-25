@@ -5,7 +5,7 @@ import numpy as np
 import argparse
 import sys
 
-from utils import save_dict_to_hdf5
+from crystfelparser.utils import save_dict_to_hdf5
 
 # from crystfelparser import crystfelparser
 
