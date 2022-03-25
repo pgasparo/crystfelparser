@@ -4,7 +4,8 @@
 ![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
 ## Overview 
-The crystfelparser application is an easy-to-use, open-source toolbox for parsin the output stream from indexamajig.
+The crystfelparser application is an easy-to-use, open-source toolbox for parsing the output stream from indexamajig.
+Basically, using this tool you can transform a raw text file into series of dictionaries, where for each frame you havea kewyword and the corresponding value, e.g. the strong reflections found by the spot finder and the positions of the predicted Bragg's reflection where the frames are indexable.
 
 ## Installation
 
@@ -31,6 +32,8 @@ Attach to the provided container with:
 ```bash
 docker run -it crystfelparser bash
 ```
+
+You are now inside the container and you can use the script.
 
 ## Quick start
 
