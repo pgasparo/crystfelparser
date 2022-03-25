@@ -20,9 +20,7 @@ conda install crystfelparser -c crystfelparser -c conda-forge
 
 ### Installation via Docker
 
-A CUDA-enabled container can be pulled from [DockerHub](https://hub.docker.com/tobedone). 
-
-We also provide a Dockerfile for manual builds:
+A Dockerfile for manual builds is provided:
 
 ```bash
 docker build -t crystfelparser . 
