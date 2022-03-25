@@ -89,7 +89,14 @@ def recursively_load_dict_contents_from_group(h5file, path):
 
 
 def stream_to_dictionary(streamfile):
-    """ Main parser function.
+    """ 
+    Function for parsing a indexamajig output stream
+
+    Args:
+      h5file: stream file to parse
+
+    Returns:
+      A dictionary
     """
     series = defaultdict(dict)
     series = dict()
