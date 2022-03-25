@@ -4,8 +4,8 @@ WORKDIR /usr/src/app
 # install crystfelparser
 RUN git clone https://github.com/pgasparo/crystfelparser 
 # update conda
-source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate 
-conda update -n base -c defaults conda
+RUN source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate 
+RUN conda update -n base -c defaults conda
 
 RUN cd crystfelparser && make
 RUN conda init
