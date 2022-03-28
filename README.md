@@ -39,7 +39,7 @@ You are now inside the container and you can use the script.
 Usage from the command line, as a script, is simple: just specify an input stream and (optional) an output file.
 
 ```bash
-python crystfelparser.py --stream ../tutorials/example.stream
+crystfelparser --stream ../tutorials/example.stream
 ```
 
 To import and use functions from the library in your code:
@@ -59,7 +59,7 @@ To load a previously saved h5 file:
 from crystfelparser.utils import load_dict_from_hdf5
 
 # parse a stream file
-parsed=load_dict_from_hdf5("tutorials/example.stream")
+parsed=load_dict_from_hdf5("parsed_stream.h5")
 len(parsed[25])
 # Output: 13
 ```
