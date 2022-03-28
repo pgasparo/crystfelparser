@@ -7,10 +7,6 @@ import sys
 
 from crystfelparser.utils import save_dict_to_hdf5
 
-# from crystfelparser import crystfelparser
-
-# ----- main parser functions --------------------
-
 
 def stream_to_dictionary(streamfile):
     """ 
@@ -162,7 +158,7 @@ def stream_to_dictionary(streamfile):
 
 
 def dictionary_parsed_to_h5(parsed_stream, outputfile):
-    """ Save to h5. """
+    """ Save a nested dictionary to h5. """
     idx_frames = np.asarray([fr for fr in parsed_stream.keys()])[np.where(
         np.asarray([len(fr.keys()) for fr in parsed_stream.values()]) == 13)[0]]
 

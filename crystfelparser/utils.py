@@ -52,7 +52,9 @@ def load_dict_from_hdf5(filename):
       A dictionary
     """
     with h5py.File(filename, 'r') as h5file:
-        return recursively_load_dict_contents_from_group(h5file, '/')
+        tmp_dictionary = recursively_load_dict_contents_from_group(h5file, '/')
+        # cast the main keys from string to int
+        return dict({int(k): v for k, v in tmp_dictionary.items()})
 
 
 def recursively_load_dict_contents_from_group(h5file, path):
