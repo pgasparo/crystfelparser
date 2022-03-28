@@ -16,7 +16,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'cursive = crystfelparser.crystfelparser:main',
+            'crystfelparser = crystfelparser.crystfelparser:main',
         ],
     },
 )
