@@ -11,12 +11,11 @@ Basically, using this tool you can transform a raw text file into series of dict
 
 Linux and MacOS are fully supported. Windows too, through WSL. 
 
-### Installation via conda
-
-We recommend and support installation via the [conda](https://docs.conda.io/en/latest/miniconda.html) package manager, and that a fresh environment is created beforehand. Then fetch the package from our channel:
+### Manual installation
 
 ```bash
-conda install crystfelparser -c crystfelparser -c conda-forge
+git clone https://github.com/pgasparo/crystfelparser 
+cd crystfelparser && make
 ```
 
 ### Installation via Docker
