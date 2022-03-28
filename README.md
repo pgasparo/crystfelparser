@@ -35,12 +35,24 @@ docker run -it crystfelparser bash
 
 You are now inside the container and you can use the script.
 
-## Quick start
+## Quick start: parsing the output stream of indexamajig
 
-Usage is simple, just specify an input stream and (optional) an output file.
+Usage from bash, as a script, is simple: just specify an input stream and (optional) an output file.
 
 ```bash
 python crystfelparser.py --stream ../tutorials/example.stream
+```
+
+To import and use functions from the library in your code:
+
+
+```python
+from crystfelparser.crystfelparser import stream_to_dictionary
+
+# parse a stream file
+parsed=stream_to_dictionary("tutorials/example.stream")
+len(parsed[25])
+# Output: 13
 ```
 
 ## Tutorials
