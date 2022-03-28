@@ -165,10 +165,9 @@ def dictionary_parsed_to_h5(parsed_stream, outputfile):
     indexed_frames = dict({fr: parsed_stream[fr] for fr in idx_frames})
     save_dict_to_hdf5(indexed_frames, outputfile)
 
-# ----- end main parser functions ----------------
-
-
 ###################################################
+# Script to be called from the command line
+
 
 def parse_args():
     """Parser"""

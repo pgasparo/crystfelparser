@@ -1,1 +1,1 @@
-sphinx-apidoc -f -o . ../delfta/ --tocfile index --separate --private
+sphinx-apidoc -f -o . ../crystfelparser/ --tocfile index --separate --private
