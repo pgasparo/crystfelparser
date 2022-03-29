@@ -12,11 +12,11 @@ setup(
     author_email="piero.gasparotto@gmail.com",
     license="AGPLv3",
     packages=find_packages(),
-    # packages=['crystfelparser'],
     zip_safe=False,
     entry_points={
         'console_scripts': [
             'crystfelparser = crystfelparser.crystfelparser:main',
+            'xdsparser = crystfelparser.xdsparser:main',
         ],
     },
 )
