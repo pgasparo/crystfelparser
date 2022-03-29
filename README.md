@@ -18,6 +18,14 @@ git clone https://github.com/pgasparo/crystfelparser
 cd crystfelparser && make
 ```
 
+Alternatively, if you already have a workin python environment with all the necessary libraries:
+
+```bash
+git clone https://github.com/pgasparo/crystfelparser 
+cd crystfelparser && pip install . 
+```
+
+
 ### Installation via Docker
 
 A Dockerfile for manual builds is provided:
