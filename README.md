@@ -42,7 +42,7 @@ docker run -it crystfelparser bash
 
 You are now inside the container and you can use the script.
 
-## Quick start: parsing the output stream of indexamajig
+## Quick start: parsing indexamajig's output stream
 
 Usage from the command line, as a script, is simple: just specify an input stream and (optional) an output file.
 
