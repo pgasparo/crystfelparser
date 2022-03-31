@@ -152,7 +152,7 @@ def main():
     inputs = parse_args()
 
     # parse the input stream
-    print("Parsing {}".format(inputs.stream))
+    print("Parsing {}".format(inputs.file))
     if inputs.dt > 0:
         timerounded = True
 
