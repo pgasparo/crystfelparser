@@ -56,7 +56,7 @@ To import and use functions from the library in your code:
 from crystfelparser.crystfelparser import stream_to_dictionary
 
 # parse a stream file
-parsed=stream_to_dictionary("tutorials/example.stream")
+parsed=stream_to_dictionary("tutorials/crystfel.stream")
 len(parsed[25])
 # Output: 13
 ```
