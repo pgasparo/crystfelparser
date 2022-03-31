@@ -47,7 +47,7 @@ You are now inside the container and you can use the script.
 Usage from the command line, as a script, is simple: just specify an input stream and (optional) an output file.
 
 ```bash
-crystfelparser --stream ../tutorials/example.stream
+crystfelparser --stream ../tutorials/crystfel.stream
 ```
 
 To import and use functions from the library in your code:
