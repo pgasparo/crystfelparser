@@ -115,18 +115,30 @@ def get_list_spots_fromfile(filename, colspot=False, timerounded=True, shift_min
 # Script to be called from the command line
 
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
 def parse_args():
     """Parser"""
     parser = argparse.ArgumentParser(
-        description='Console script to parse XDS_ASCII.HKL (or SPOT.XDS)')
+        description='Console script to parse XDS_ASCII.HKL (or SPOT.XDS)'
+    )
 
     parser.add_argument(
         '--file', default="XDS_ASCII.HKL", help='XDS file to parse [e.g. XDS_ASCII.HKL]'
     )
 
-    parser.add_argument(
-        '--colspot', type=Boolean, default=False, help='Reading a SPOT.XDS file (COLSPOT output) [Default: False]'
-    )
+    parser.add_argument("--colspot", type=str2bool, nargs='?', const=True, default=False,
+                        help="Reading a SPOT.XDS file (COLSPOT output) [Default: False]."
+                        )
 
     parser.add_argument(
         '--dt', type=int, default=0, help='Time window to flatten [-dt, dt] [Default: 0]'
@@ -157,6 +169,7 @@ def main():
     if inputs.dt > 0:
         timerounded = True
 
+    # for now shift_min is always True
     parsed_stream = get_list_spots_fromfile(
         inputs.file, inputs.colspot, timerounded, True, inputs.dt)
 

@@ -4,8 +4,10 @@
 ![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
 ## Overview 
-The crystfelparser application is an easy-to-use, open-source toolbox for parsing the output stream from indexamajig.
+The crystfelparser application is an easy-to-use, open-source toolbox for parsing the output stream from [indexamajig](https://www.desy.de/~twhite/crystfel/manual-indexamajig.html).
 Basically, using this tool you can transform a raw text file into series of dictionaries, where for each frame you havea kewyword and the corresponding value, e.g. the strong reflections found by the spot finder and the positions of the predicted Bragg's reflections where the frames are indexable.
+
+This library can also be used to parse the outputs from [XDS](https://xds.mr.mpg.de/html_doc/xds_files.html), i.e. [XDS_ASCII.HKL](https://xds.mr.mpg.de/html_doc/xds_files.html#XDS_ASCII.HKL) and [SPOT.XDS](https://xds.mr.mpg.de/html_doc/xds_files.html#SPOT.XDS).
 
 ## Installation
 
@@ -70,6 +72,20 @@ from crystfelparser.utils import load_dict_from_hdf5
 parsed=load_dict_from_hdf5("parsed_stream.h5")
 len(parsed[25])
 # Output: 13
+```
+
+### Parsing XDS output
+
+XDS outputs can be parsed using the command line tool `xdsparser`:
+
+```bash
+xdsparser --file XDS_ASCII.HKL --dt 3
+```
+
+or if you want to read the ouput from colspot
+
+```bash
+xdsparser --file SPOT.XDS --dt 0 --colspot
 ```
 
 ## Tutorials
