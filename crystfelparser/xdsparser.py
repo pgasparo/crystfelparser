@@ -166,6 +166,8 @@ def main():
 
     # parse the input stream
     print("Parsing {}".format(inputs.file))
+
+    timerounded = False
     if inputs.dt > 0:
         timerounded = True
 
