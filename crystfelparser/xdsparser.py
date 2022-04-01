@@ -93,6 +93,7 @@ def get_list_spots_fromfile(filename, colspot=False, timerounded=True, shift_min
                 if line.split()[0][0] != "!":
                     spots_reflections_raw.append(
                         list(map(float, line.split()[5:8])))
+        spots_reflections_raw = np.asarray(spots_reflections_raw)
 
     if timerounded:
         spots_reflections_raw = round_time(spots_reflections_raw, dt)
