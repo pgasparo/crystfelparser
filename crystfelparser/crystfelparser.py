@@ -137,7 +137,7 @@ def stream_to_dictionary(streamfile):
                             # h    k    l          I   sigma(I)       peak background  fs/px  ss/px
                             line = np.asarray(text_file.readline().split()[:9])
                             # append only:   fs/px  ss/px  I sigma(I)
-                            reflections_pos.append(line[[7, 8, 3, 4]])
+                            reflections_pos.append(line[[7, 8, 3, 4, 0, 1, 2]])
                             ln += 1
                         tmpframe["predicted_reflections"] = np.asarray(
                             reflections_pos).astype(np.float)
