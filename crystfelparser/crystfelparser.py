@@ -175,10 +175,13 @@ class streamfile_parser:
         (
             self.beam_center_x,
             self.beam_center_y,
-            self.clen,
-            self.wavelength,
-            self.cellpdb,
+            self.nx,  # detector size x
+            self.ny,  # detector size y
+            self.clen,  # detector distance
+            self.wavelength,  # beam wavelength
+            self.cellpdb,  # 3 lengths, 3 angles
         ) = self.get_experiment_info()
+        # ignoring non-orthogonal cells for now
         self.cell_matrix = np.array(
             [[self.cellpdb[0], 0, 0], [0, self.cellpdb[1], 0], [0, 0, self.cellpdb[2]]]
         )
@@ -209,6 +212,25 @@ class streamfile_parser:
         (out, err) = proc.communicate()
         out = out.decode("UTF-8")
         posy = float(out.split()[2])
+
+        proc = subprocess.Popen(
+            "grep max_fs {}".format(self.streamfile),
+            stdout=subprocess.PIPE,
+            shell=True,
+        )
+        (out, err) = proc.communicate()
+        out = out.decode("UTF-8")
+        nx = int(out.split()[2]) + 1
+
+        proc = subprocess.Popen(
+            "grep max_ss {}".format(self.streamfile),
+            stdout=subprocess.PIPE,
+            shell=True,
+        )
+        (out, err) = proc.communicate()
+        out = out.decode("UTF-8")
+        ny = int(out.split()[2]) + 1
+
         proc = subprocess.Popen(
             "grep clen {}".format(self.streamfile), stdout=subprocess.PIPE, shell=True
         )
@@ -242,7 +264,7 @@ class streamfile_parser:
             if line.split()[0] in {"a", "b", "c", "al", "be", "ga"}
         ]
         cell = np.array([np.float(line.split()[2]) for line in cellstr])
-        return abs(posx), abs(posy), clen, photon_energy, cell
+        return abs(posx), abs(posy), nx, ny, clen, photon_energy, cell
 
     def get_indexable_frames(self):
         """
