@@ -1,5 +1,5 @@
 # crystfelparser
-![](docs/crystfelexporter_schema.png)
+![Schema](docs/crystfelexporter_schema.png)
 
 ![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
@@ -55,11 +55,11 @@ crystfelparser --stream ../tutorials/crystfel.stream
 To import and use functions from the library in your code:
 
 ```python
-from crystfelparser.crystfelparser import stream_to_dictionary
+from crystfelparser.crystfelparser import streamfile_parser
 
 # parse a stream file
-parsed=stream_to_dictionary("tutorials/crystfel.stream")
-len(parsed[25])
+tutorial_stream = streamfile_parser("tutorials/crystfel.stream")
+len(tutorial_stream.parsed[25])
 # Output: 13
 ```
 

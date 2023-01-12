@@ -167,35 +167,7 @@ def dictionary_parsed_to_h5(parsed_stream, outputfile):
     save_dict_to_hdf5(indexed_frames, outputfile)
 
 
-###################################################
-# Script to be called from the command line
-
-
-def parse_args():
-    """Parser"""
-    parser = argparse.ArgumentParser(description="Console script to parse indexamajig.")
-
-    parser.add_argument(
-        "--stream",
-        default="input.stream",
-        help="Streaming file to parse [e.g. input.stream]",
-    )
-
-    parser.add_argument(
-        "--output",
-        default="parsed_stream.h5",
-        help="Parsed file, stored in hdf5 format -- only indexable frames are stored! [default: parsed_stream.h5]",
-    )
-
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-    else:
-        args = parser.parse_args()
-        # args.func(**vars(args))
-
-        return args
-
-
+# Define a pythonic object to handle streams
 class streamfile_parser:
     def __init__(self, streamfile):
         self.streamfile = streamfile
@@ -428,8 +400,11 @@ class streamfile_parser:
         """Finds the reciprocal basis for a given primal basis in direct space.
 
         Args:
-            primal_basis: a numpy array with shape (3,3) representing the primal basis in the direct space.
-            with_correction: a boolean flag indicating whether to apply a correction to the reciprocal basis. Default: False
+            primal_basis:    a numpy array with shape (3,3) representing
+                             the primal basis in the direct space.
+            with_correction: a boolean flag indicating whether to apply
+                             a correction to the reciprocal basis.
+                             Default: False
         Returns:
             A numpy array with shape (3,3) representing the reciprocal basis.
         """
@@ -447,6 +422,35 @@ class streamfile_parser:
             return basis.T
 
 
+###################################################
+# Script to be called from the command line
+
+
+def parse_args():
+    """Parser"""
+    parser = argparse.ArgumentParser(description="Console script to parse indexamajig.")
+
+    parser.add_argument(
+        "--stream",
+        default="input.stream",
+        help="Streaming file to parse [e.g. input.stream]",
+    )
+
+    parser.add_argument(
+        "--output",
+        default="parsed_stream.h5",
+        help="Parsed file, stored in hdf5 format -- only indexable frames are stored! [default: parsed_stream.h5]",
+    )
+
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+    else:
+        args = parser.parse_args()
+        # args.func(**vars(args))
+
+        return args
+
+
 def main():
     """ """
     # read from the parser
@@ -454,11 +458,11 @@ def main():
 
     # parse the input stream
     print("Parsing {}".format(inputs.stream))
-    parsed_stream = stream_to_dictionary(inputs.stream)
+    stream_parsed = streamfile_parser(inputs.stream)
 
     # save the input stream to a .h5 file
-    dictionary_parsed_to_h5(parsed_stream, inputs.output)
-    print("Indexable frames saved in {}".format(inputs.output))
+    dictionary_parsed_to_h5(stream_parsed.parsed, inputs.output)
+    print("Stream saved in {}".format(inputs.output))
 
 
 if __name__ == "__main__":
