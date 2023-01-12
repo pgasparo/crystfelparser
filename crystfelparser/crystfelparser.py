@@ -171,7 +171,7 @@ def dictionary_parsed_to_h5(parsed_stream, outputfile):
 class streamfile_parser:
     def __init__(self, streamfile):
         self.streamfile = streamfile
-        self.parsed = self.stream_to_dictionary()
+        self.parsed = self.parse_stream()
         (
             self.beam_center_x,
             self.beam_center_y,
@@ -185,8 +185,8 @@ class streamfile_parser:
         # self.reciprocal_cell_matrix = np.linalg.inv(self.cell_matrix)
         self.reciprocal_cell_matrix = np.linalg.inv(self.cell_matrix)
 
-    def stream_to_dictionary(self):
-        stream_to_dictionary(self.streamfile)
+    def parse_stream(self):
+        return stream_to_dictionary(self.streamfile)
 
     def get_experiment_info(self):
         """
