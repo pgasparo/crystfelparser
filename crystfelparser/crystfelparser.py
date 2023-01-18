@@ -115,9 +115,14 @@ def stream_to_dictionary(streamfile):
                     tmpframe["lattice_type"] = text_file.readline().split()[-1]
                     ln += 1
 
-                    # loop over the next 6 lines to get the diffraction resolution
-                    line = loop_over_next_N_lines(text_file, 6).split()
-                    ln += 6
+                    # loop over the next 5 lines to get the diffraction resolution
+                    line = loop_over_next_N_lines(text_file, 5).split()
+                    ln += 5
+
+                    if line[0] == "predict_refine/det_shift":
+                        line = loop_over_next_N_lines(text_file, 1).split()
+                        ln += 1
+
                     tmpframe["diffraction_resolution_limit [nm^-1]"] = np.float(line[2])
                     tmpframe["diffraction_resolution_limit [A]"] = np.float(line[5])
 
