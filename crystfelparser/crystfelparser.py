@@ -276,7 +276,7 @@ class streamfile_parser:
         Returns a list of indexable frames.
         """
         return np.array(
-            [frame for frame, info in self.parsed.items() if len(info.keys()) > 7]
+            sorted([frame for frame, info in self.parsed.items() if len(info.keys()) > 7])
         )
 
     def get_cellslist(self):
@@ -285,9 +285,7 @@ class streamfile_parser:
         """
         return np.array(
             [
-                np.array(
-                    np.linalg.inv(self.parsed[frame]["reciprocal_cell_matrix"] / 10.0)
-                )
+                np.linalg.inv(self.parsed[frame]["reciprocal_cell_matrix"] / 10.0).T
                 for frame in self.get_indexable_frames()
             ]
         )
@@ -444,9 +442,9 @@ class streamfile_parser:
         basis = np.column_stack([b1, b2, b3])
         if with_correction:
             mask = np.array([[-1.0, 1.0, 1.0], [1.0, -1.0, -1.0], [-1.0, 1.0, 1.0]])
-            return (basis * mask).T
+            return (basis * mask)
         else:
-            return basis.T
+            return basis
 
 
 ###################################################
