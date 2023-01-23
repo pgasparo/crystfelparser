@@ -421,14 +421,13 @@ class streamfile_parser:
                 )
                 text_file.write(line)
                 
-    def parse_file(input_file, output_file):
+    def write_sorted_stream(self, output_file):
         """
         This function reads a CrystFEL stream file and extracts the header and chunks of data. 
         The header and chunks are then written to a new file with the chucks sorted
         in ascending order.
 
         Parameters:
-        input_file (str): The path of the CrystFEL stream file to parse
         output_file (str): The path of the sorted output stream to write
 
         Returns:
@@ -437,7 +436,7 @@ class streamfile_parser:
         chunks = {}
         header = ""
         current_chunk = None
-        with open(input_file, 'r') as f:
+        with open(self.streamfile, 'r') as f:
             for line in f:
                 if '----- Begin chunk -----' in line:
                     current_chunk = []
