@@ -420,6 +420,49 @@ class streamfile_parser:
                     h5file, fr, *np.array(reccel).ravel()
                 )
                 text_file.write(line)
+                
+    def parse_file(input_file, output_file):
+        """
+        This function reads a CrystFEL stream file and extracts the header and chunks of data. 
+        The header and chunks are then written to a new file with the chucks sorted
+        in ascending order.
+
+        Parameters:
+        input_file (str): The path of the CrystFEL stream file to parse
+        output_file (str): The path of the sorted output stream to write
+
+        Returns:
+        None
+        """
+        chunks = {}
+        header = ""
+        current_chunk = None
+        with open(input_file, 'r') as f:
+            for line in f:
+                if '----- Begin chunk -----' in line:
+                    current_chunk = []
+                    break
+                header += line
+            for line in f:
+                if '----- Begin chunk -----' in line:
+                    current_chunk = []
+                elif '----- End chunk -----' in line:
+                    chunks[event_num] = current_chunk
+                    current_chunk = None
+                elif current_chunk is not None:
+                    current_chunk.append(line)
+                    match = re.search(r'Event: //(\d+)', line)
+                    if match:
+                        event_num = int(match.group(1))
+
+        # write out the sorted output stream
+        with open(output_file, "w") as f:
+            f.write(header)
+            for event_num in sorted(chunks.keys()):
+                chunks[event_num].insert(0, "----- Begin chunk -----\n")
+                chunks[event_num].append("----- End chunk -----\n")
+                f.writelines(chunks[event_num])
+
 
     def get_reciprocal_basis(self, primal_basis, with_correction=False):
         """Finds the reciprocal basis for a given primal basis in direct space.
