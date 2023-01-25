@@ -4,6 +4,7 @@ from collections import defaultdict
 import numpy as np
 import argparse
 import sys
+import re
 import subprocess
 
 from crystfelparser.utils import save_dict_to_hdf5
@@ -276,7 +277,9 @@ class streamfile_parser:
         Returns a list of indexable frames.
         """
         return np.array(
-            sorted([frame for frame, info in self.parsed.items() if len(info.keys()) > 7])
+            sorted(
+                [frame for frame, info in self.parsed.items() if len(info.keys()) > 7]
+            )
         )
 
     def get_cellslist(self):
@@ -420,10 +423,10 @@ class streamfile_parser:
                     h5file, fr, *np.array(reccel).ravel()
                 )
                 text_file.write(line)
-                
+
     def write_sorted_stream(self, output_file):
         """
-        This function reads a CrystFEL stream file and extracts the header and chunks of data. 
+        This function reads a CrystFEL stream file and extracts the header and chunks of data.
         The header and chunks are then written to a new file with the chucks sorted
         in ascending order.
 
@@ -436,21 +439,22 @@ class streamfile_parser:
         chunks = {}
         header = ""
         current_chunk = None
-        with open(self.streamfile, 'r') as f:
+        event_num = None  # define event_num before it is used
+        with open(self.streamfile, "r") as f:
             for line in f:
-                if '----- Begin chunk -----' in line:
+                if "----- Begin chunk -----" in line:
                     current_chunk = []
                     break
                 header += line
             for line in f:
-                if '----- Begin chunk -----' in line:
+                if "----- Begin chunk -----" in line:
                     current_chunk = []
-                elif '----- End chunk -----' in line:
+                elif "----- End chunk -----" in line:
                     chunks[event_num] = current_chunk
                     current_chunk = None
                 elif current_chunk is not None:
                     current_chunk.append(line)
-                    match = re.search(r'Event: //(\d+)', line)
+                    match = re.search(r"Event: //(\d+)", line)
                     if match:
                         event_num = int(match.group(1))
 
@@ -461,7 +465,6 @@ class streamfile_parser:
                 chunks[event_num].insert(0, "----- Begin chunk -----\n")
                 chunks[event_num].append("----- End chunk -----\n")
                 f.writelines(chunks[event_num])
-
 
     def get_reciprocal_basis(self, primal_basis, with_correction=False):
         """Finds the reciprocal basis for a given primal basis in direct space.
@@ -484,7 +487,7 @@ class streamfile_parser:
         basis = np.column_stack([b1, b2, b3])
         if with_correction:
             mask = np.array([[-1.0, 1.0, 1.0], [1.0, -1.0, -1.0], [-1.0, 1.0, 1.0]])
-            return (basis * mask)
+            return basis * mask
         else:
             return basis
 
