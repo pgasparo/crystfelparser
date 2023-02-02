@@ -172,6 +172,46 @@ def dictionary_parsed_to_h5(parsed_stream, outputfile):
     indexed_frames = dict({fr: parsed_stream[fr] for fr in idx_frames})
     save_dict_to_hdf5(indexed_frames, outputfile)
 
+def lattice_param_to_matrix(a, b, c, alpha, beta, gamma):
+    """
+    Convert lattice parameters to a matrix representation.
+
+    Parameters
+    ----------
+    a : float
+        Length of lattice vector a.
+    b : float
+        Length of lattice vector b.
+    c : float
+        Length of lattice vector c.
+    alpha : float
+        Angle between b and c in degrees.
+    beta : float
+        Angle between a and c in degrees.
+    gamma : float
+        Angle between a and b in degrees.
+
+    Returns
+    -------
+    base_matrix : numpy.ndarray
+        (3, 3) matrix representing the base vectors of the lattice.
+
+    Examples
+    --------
+    >>> lattice_param_to_matrix(2, 2, 2, 90, 90, 90)
+    array([[2., 0., 0.],
+           [0., 2., 0.],
+           [0., 0., 2.]])
+    """
+    
+    alpha, beta, gamma = np.deg2rad((alpha, beta, gamma))
+    a_ = np.array([a, 0, 0])
+    b_ = np.array([b*np.cos(gamma), b*np.sin(gamma), 0])
+    x = np.cos(beta)
+    y = (np.cos(alpha) - np.cos(beta)*np.cos(gamma)) / np.sin(gamma)
+    z = np.sqrt(np.sin(beta)**2 - y**2)
+    c_ = np.array([c*x, c*y, c*z])
+    return np.array([a_, b_, c_])
 
 # Define a pythonic object to handle streams
 class streamfile_parser:
@@ -187,12 +227,10 @@ class streamfile_parser:
             self.wavelength,  # beam wavelength
             self.cellpdb,  # 3 lengths, 3 angles
         ) = self.get_experiment_info()
-        # ignoring non-orthogonal cells for now
-        self.cell_matrix = np.array(
-            [[self.cellpdb[0], 0, 0], [0, self.cellpdb[1], 0], [0, 0, self.cellpdb[2]]]
-        )
-        # self.reciprocal_cell_matrix = np.linalg.inv(self.cell_matrix)
-        self.reciprocal_cell_matrix = np.linalg.inv(self.cell_matrix)
+        # convert lattice parameters to a matrix representation
+        self.cell_matrix = lattice_param_to_matrix(*self.cellpdb)
+        # get the reciprocal cell matrix
+        self.reciprocal_cell_matrix = np.linalg.inv(self.cell_matrix).T
 
     def parse_stream(self):
         return stream_to_dictionary(self.streamfile)
