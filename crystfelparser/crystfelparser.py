@@ -121,6 +121,8 @@ def stream_to_dictionary(streamfile):
                     ln += 5
 
                     if line[0] == "predict_refine/det_shift":
+                        tmpframe["det_shift_x"] = line[3]
+                        tmpframe["det_shift_y"] = line[6]
                         line = loop_over_next_N_lines(text_file, 1).split()
                         ln += 1
 
