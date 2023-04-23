@@ -268,10 +268,10 @@ class streamfile_parser:
                         ny = int(line.split()[2]) + 1
                     elif "clen" in line and is_number(line.split()[2]):
                         clen = float(line.split()[2]) * 1000
-                    elif "photon_energy" in line:
-                        photon_energy = 12398.42 / np.float(
-                            max([int(i) for i in set(line.split()) if i.isnumeric()])
-                        )
+                    elif "photon_energy_eV" in line or "photon_energy" in line:
+                        energy_values = [float(i) for i in line.split() if is_number(i)]
+                        if energy_values:
+                            photon_energy = 12398.42 / np.float(max(energy_values))
                     elif "Begin unit cell" in line:
                         cell_start_index = line_num + 1
                     elif cell_start_index is not None and line_num <= cell_start_index + 5:
