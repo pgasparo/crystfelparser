@@ -239,81 +239,124 @@ class streamfile_parser:
 
     def parse_stream(self):
         return stream_to_dictionary(self.streamfile)
-
+    
     def get_experiment_info(self):
         """
-        get same info about the experiment from the stream file
+        Get same info about the experiment from the stream file
         """
-        proc = subprocess.Popen(
-            "grep corner_x {}".format(self.streamfile),
-            stdout=subprocess.PIPE,
-            shell=True,
-        )
-        (out, err) = proc.communicate()
-        out = out.decode("UTF-8")
-        posx = float(out.split()[2])
+        posx = posy = nx = ny = clen = photon_energy = None
+        cell = []
+        cell_start_index = None
 
-        proc = subprocess.Popen(
-            "grep corner_y {}".format(self.streamfile),
-            stdout=subprocess.PIPE,
-            shell=True,
-        )
-        (out, err) = proc.communicate()
-        out = out.decode("UTF-8")
-        posy = float(out.split()[2])
+        try:
+            with open(self.streamfile, "r") as f:
+                for line_num, line in enumerate(f):
+                    if "corner_x" in line:
+                        posx = float(line.split()[2])
+                    elif "corner_y" in line:
+                        posy = float(line.split()[2])
+                    elif "max_fs" in line:
+                        nx = int(line.split()[2]) + 1
+                    elif "max_ss" in line:
+                        ny = int(line.split()[2]) + 1
+                    elif "clen" in line:
+                        clen = float(line.split()[2]) * 1000
+                    elif "photon_energy" in line:
+                        photon_energy = 12398.42 / np.float(
+                            max([int(i) for i in set(line.split()) if i.isnumeric()])
+                        )
+                    elif "Begin unit cell" in line:
+                        cell_start_index = line_num + 1
+                    elif cell_start_index is not None and line_num <= cell_start_index + 5:
+                        if len(line) > 1 and line.split()[0] in {"a", "b", "c", "al", "be", "ga"}:
+                            cell.append(np.float(line.split()[2]))
+                            
+                    if all(param is not None for param in (posx, posy, nx, ny, clen, photon_energy)) and len(cell) == 6:
+                        break
 
-        proc = subprocess.Popen(
-            "grep max_fs {}".format(self.streamfile),
-            stdout=subprocess.PIPE,
-            shell=True,
-        )
-        (out, err) = proc.communicate()
-        out = out.decode("UTF-8")
-        nx = int(out.split()[2]) + 1
+        except (ValueError, IndexError):
+            raise ValueError(f"Invalid value encountered in line: {line.strip()}")
 
-        proc = subprocess.Popen(
-            "grep max_ss {}".format(self.streamfile),
-            stdout=subprocess.PIPE,
-            shell=True,
-        )
-        (out, err) = proc.communicate()
-        out = out.decode("UTF-8")
-        ny = int(out.split()[2]) + 1
+        if None in (posx, posy, nx, ny, clen, photon_energy):
+            raise ValueError("One or more parameters are missing from the stream file")
 
-        proc = subprocess.Popen(
-            "grep clen {}".format(self.streamfile), stdout=subprocess.PIPE, shell=True
-        )
-        (out, err) = proc.communicate()
-        out = out.decode("UTF-8")
-        clen = float(out.split()[2]) * 1000
-
-        proc = subprocess.Popen(
-            "grep 'photon_energy' {}".format(self.streamfile),
-            stdout=subprocess.PIPE,
-            shell=True,
-        )
-        (out, err) = proc.communicate()
-        out = out.decode("UTF-8")
-        photon_energy = 12398.42 / np.float(
-            max([int(i) for i in set(out.split()) if i.isnumeric()])
-        )
-
-        proc = subprocess.Popen(
-            "grep -A11 'Begin unit cell'  {}".format(self.streamfile),
-            stdout=subprocess.PIPE,
-            shell=True,
-        )
-        (out, err) = proc.communicate()
-        out = out.decode("UTF-8")
-        cellstr = [
-            line
-            for line in out.split("\n")
-            if len(line) > 0
-            if len(line) > 1
-            if line.split()[0] in {"a", "b", "c", "al", "be", "ga"}
-        ]
-        cell = np.array([np.float(line.split()[2]) for line in cellstr])
+        cell = np.array(cell)
         return abs(posx), abs(posy), nx, ny, clen, photon_energy, cell
+
+    # def get_experiment_info(self):
+    #     """
+    #     get same info about the experiment from the stream file
+    #     """
+    #     proc = subprocess.Popen(
+    #         "grep corner_x {}".format(self.streamfile),
+    #         stdout=subprocess.PIPE,
+    #         shell=True,
+    #     )
+    #     (out, err) = proc.communicate()
+    #     out = out.decode("UTF-8")
+    #     posx = float(out.split()[2])
+
+    #     proc = subprocess.Popen(
+    #         "grep corner_y {}".format(self.streamfile),
+    #         stdout=subprocess.PIPE,
+    #         shell=True,
+    #     )
+    #     (out, err) = proc.communicate()
+    #     out = out.decode("UTF-8")
+    #     posy = float(out.split()[2])
+
+    #     proc = subprocess.Popen(
+    #         "grep max_fs {}".format(self.streamfile),
+    #         stdout=subprocess.PIPE,
+    #         shell=True,
+    #     )
+    #     (out, err) = proc.communicate()
+    #     out = out.decode("UTF-8")
+    #     nx = int(out.split()[2]) + 1
+
+    #     proc = subprocess.Popen(
+    #         "grep max_ss {}".format(self.streamfile),
+    #         stdout=subprocess.PIPE,
+    #         shell=True,
+    #     )
+    #     (out, err) = proc.communicate()
+    #     out = out.decode("UTF-8")
+    #     ny = int(out.split()[2]) + 1
+
+    #     proc = subprocess.Popen(
+    #         "grep clen {}".format(self.streamfile), stdout=subprocess.PIPE, shell=True
+    #     )
+    #     (out, err) = proc.communicate()
+    #     out = out.decode("UTF-8")
+    #     clen = float(out.split()[2]) * 1000
+
+    #     proc = subprocess.Popen(
+    #         "grep 'photon_energy' {}".format(self.streamfile),
+    #         stdout=subprocess.PIPE,
+    #         shell=True,
+    #     )
+    #     (out, err) = proc.communicate()
+    #     out = out.decode("UTF-8")
+    #     photon_energy = 12398.42 / np.float(
+    #         max([int(i) for i in set(out.split()) if i.isnumeric()])
+    #     )
+
+    #     proc = subprocess.Popen(
+    #         "grep -A11 'Begin unit cell'  {}".format(self.streamfile),
+    #         stdout=subprocess.PIPE,
+    #         shell=True,
+    #     )
+    #     (out, err) = proc.communicate()
+    #     out = out.decode("UTF-8")
+    #     cellstr = [
+    #         line
+    #         for line in out.split("\n")
+    #         if len(line) > 0
+    #         if len(line) > 1
+    #         if line.split()[0] in {"a", "b", "c", "al", "be", "ga"}
+    #     ]
+    #     cell = np.array([np.float(line.split()[2]) for line in cellstr])
+    #     return abs(posx), abs(posy), nx, ny, clen, photon_energy, cell
 
     def get_indexable_frames(self):
         """
