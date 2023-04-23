@@ -56,16 +56,19 @@ def stream_to_dictionary(streamfile):
                 # save who indexed the image
                 indexer_tmp = line.split()[-1]
                 # if indexed, there is an additional line here
-                npeaks_lines = 6
-                if indexer_tmp == "none":
-                    npeaks_lines = 5
                 tmpframe["indexed_by"] = indexer_tmp
 
                 ##### Get the STRONG REFLEXTIONS from the spotfinder #####
-
-                # loop over the next 5/6 lines to get the number of reflctions
-                line = loop_over_next_N_lines(text_file, npeaks_lines)
-                ln += npeaks_lines
+                keyw=""
+                while keyw != "num_peaks":
+                    # loop over the next 5/6 lines to get the number of reflctions
+                    line = loop_over_next_N_lines(text_file, 1)
+                    ln += 1
+                    try:
+                        keyw=line.split()[0]
+                    except:
+                        keyw=""
+                        
                 # get the number of peaks
                 num_peaks = np.int(line.split()[-1])
                 tmpframe["num_peaks"] = num_peaks
