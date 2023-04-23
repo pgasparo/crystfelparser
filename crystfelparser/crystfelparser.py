@@ -241,12 +241,12 @@ class streamfile_parser:
         return stream_to_dictionary(self.streamfile)
     
     def get_experiment_info(self):
+        import re
         """
         Get same info about the experiment from the stream file
         """
         posx = posy = nx = ny = clen = photon_energy = None
-        cell = []
-        cell_start_index = None
+        cell = [0] * 6
 
         def is_number(string):
             try:
@@ -272,19 +272,33 @@ class streamfile_parser:
                         energy_values = [float(i) for i in line.split() if is_number(i)]
                         if energy_values:
                             photon_energy = 12398.42 / np.float(max(energy_values))
-                    elif "Begin unit cell" in line:
-                        cell_start_index = line_num + 1
-                    elif cell_start_index is not None and line_num <= cell_start_index + 5:
-                        if len(line) > 1 and line.split()[0] in {"a", "b", "c", "al", "be", "ga"} and is_number(line.split()[2]):
-                            cell.append(np.float(line.split()[2]))
+                    
+                    cell_pattern = re.compile(r"(?P<param>[abc]|al|be|ga)\s*=\s*(?P<value>\d+\.\d+)\s*(?P<unit>[Aa]|[Dd]eg)")
+                    if line.startswith("a") or line.startswith("b") or line.startswith("c") or line.startswith("al") or line.startswith("be") or line.startswith("ga"):
+                        match = cell_pattern.search(line)
+                        if match:
+                            param = match.group("param")
+                            value = float(match.group("value"))
+                            if param == "a":
+                                cell[0] = value
+                            elif param == "b":
+                                cell[1] = value
+                            elif param == "c":
+                                cell[2] = value
+                            elif param == "al":
+                                cell[3] = value
+                            elif param == "be":
+                                cell[4] = value
+                            elif param == "ga":
+                                cell[5] = value
 
-                    if all(param is not None for param in (posx, posy, nx, ny, clen, photon_energy)) and len(cell) == 6:
+                    if all(param is not None for param in (posx, posy, nx, ny, clen, photon_energy)) and all(val != 0 for val in cell):
                         break
 
         except (ValueError, IndexError):
             raise ValueError(f"Invalid value encountered in line: {line.strip()}")
 
-        if None in (posx, posy, nx, ny, clen, photon_energy) or len(cell) != 6:
+        if None in (posx, posy, nx, ny, clen, photon_energy) or len(cell) != 6 or any(val == 0 for val in cell):
             raise ValueError("One or more parameters are missing from the stream file")
 
         cell = np.array(cell)
