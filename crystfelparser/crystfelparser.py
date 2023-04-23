@@ -298,8 +298,38 @@ class streamfile_parser:
         except (ValueError, IndexError):
             raise ValueError(f"Invalid value encountered in line: {line.strip()}")
 
-        if None in (posx, posy, nx, ny, clen, photon_energy) or len(cell) != 6 or any(val == 0 for val in cell):
-            raise ValueError("One or more parameters are missing from the stream file")
+        missing_params = []
+        if posx is None:
+            missing_params.append("posx")
+            posx = -33
+        if posy is None:
+            missing_params.append("posy")
+            posy = -33
+        if nx is None:
+            missing_params.append("nx")
+            nx = -33
+        if ny is None:
+            missing_params.append("ny")
+            ny = -33
+        if clen is None:
+            missing_params.append("clen")
+            clen = -33
+        if photon_energy is None:
+            missing_params.append("photon_energy")
+            photon_energy = -33
+        
+        if any(val == 0 for val in cell):
+            missing_cell_params = [f"{param} ({index})" for index, param in enumerate(['a', 'b', 'c', 'al', 'be', 'ga']) if cell[index] == 0]
+            print(f"Warning: Missing cell parameter(s) {', '.join(missing_cell_params)} from the stream file.")
+            for index, val in enumerate(cell):
+                if val == 0:
+                    cell[index] = -33
+
+        if missing_params:
+            print(f"Warning: Missing parameter(s) {', '.join(missing_params)} from the stream file.")
+
+        print(f"posx {posx}, posy {posy}, nx{nx }, ny {ny}, clen {clen}, photon_energy {photon_energy}")
+        print(f"cell: {cell}")
 
         cell = np.array(cell)
         return abs(posx), abs(posy), nx, ny, clen, photon_energy, cell
