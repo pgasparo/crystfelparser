@@ -248,18 +248,25 @@ class streamfile_parser:
         cell = []
         cell_start_index = None
 
+        def is_number(string):
+            try:
+                float(string)
+                return True
+            except ValueError:
+                return False
+
         try:
             with open(self.streamfile, "r") as f:
                 for line_num, line in enumerate(f):
-                    if "corner_x" in line:
+                    if "corner_x" in line and is_number(line.split()[2]):
                         posx = float(line.split()[2])
-                    elif "corner_y" in line:
+                    elif "corner_y" in line and is_number(line.split()[2]):
                         posy = float(line.split()[2])
-                    elif "max_fs" in line:
+                    elif "max_fs" in line and is_number(line.split()[2]):
                         nx = int(line.split()[2]) + 1
-                    elif "max_ss" in line:
+                    elif "max_ss" in line and is_number(line.split()[2]):
                         ny = int(line.split()[2]) + 1
-                    elif "clen" in line:
+                    elif "clen" in line and is_number(line.split()[2]):
                         clen = float(line.split()[2]) * 1000
                     elif "photon_energy" in line:
                         photon_energy = 12398.42 / np.float(
@@ -268,20 +275,21 @@ class streamfile_parser:
                     elif "Begin unit cell" in line:
                         cell_start_index = line_num + 1
                     elif cell_start_index is not None and line_num <= cell_start_index + 5:
-                        if len(line) > 1 and line.split()[0] in {"a", "b", "c", "al", "be", "ga"}:
+                        if len(line) > 1 and line.split()[0] in {"a", "b", "c", "al", "be", "ga"} and is_number(line.split()[2]):
                             cell.append(np.float(line.split()[2]))
-                            
+
                     if all(param is not None for param in (posx, posy, nx, ny, clen, photon_energy)) and len(cell) == 6:
                         break
 
         except (ValueError, IndexError):
             raise ValueError(f"Invalid value encountered in line: {line.strip()}")
 
-        if None in (posx, posy, nx, ny, clen, photon_energy):
+        if None in (posx, posy, nx, ny, clen, photon_energy) or len(cell) != 6:
             raise ValueError("One or more parameters are missing from the stream file")
 
         cell = np.array(cell)
         return abs(posx), abs(posy), nx, ny, clen, photon_energy, cell
+
 
     # def get_experiment_info(self):
     #     """
