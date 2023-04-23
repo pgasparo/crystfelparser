@@ -328,12 +328,8 @@ class streamfile_parser:
         if missing_params:
             print(f"Warning: Missing parameter(s) {', '.join(missing_params)} from the stream file.")
 
-        print(f"posx {posx}, posy {posy}, nx{nx }, ny {ny}, clen {clen}, photon_energy {photon_energy}")
-        print(f"cell: {cell}")
-
         cell = np.array(cell)
         return abs(posx), abs(posy), nx, ny, clen, photon_energy, cell
-
 
     # def get_experiment_info(self):
     #     """
