@@ -16,6 +16,7 @@ def save_frames_to_h5(frames, output_file):
         grp = f.create_group('/entry/data')
         # Use the hdf5plugin to specify the Bitshuffle and LZ4 filters
         grp.create_dataset('data', data=frames, **hdf5plugin.Bitshuffle())
+        # grp.create_dataset('data', data=frames)
 
 def process_files(h5_file, stream_file, output_file, window_size):
     stream = streamfile_parser(stream_file)
@@ -26,7 +27,7 @@ def process_files(h5_file, stream_file, output_file, window_size):
         original_frame = get_frame(idx, h5_file)
         new_frame = np.zeros_like(original_frame)
         for point in stream.parsed[idx]['predicted_reflections'][:,:2]:
-            x, y = point.astype(int)
+            y, x = point.astype(int)
             new_frame[x-window_size:x+window_size+1, y-window_size:y+window_size+1] = \
                 original_frame[x-window_size:x+window_size+1, y-window_size:y+window_size+1]
         new_frames.append(new_frame)
