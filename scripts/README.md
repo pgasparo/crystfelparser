@@ -47,3 +47,7 @@ python cxi_peaks_list.py <streamfile> <h5filename> [--output <output_filename>] 
 - `h5filename`: (Required) The HDF5 image data file path.
 - `--output`: (Optional) The CXI output filename. Default is `<h5filename>.cxi`.
 - `--datapath`: (Optional) Source HDF5 path in linked h5filename. Default is `/entry/data/data`.
+
+### Plot_Reflections.ipynb
+
+Just a jupyter notebook to visualise a frame from an h5 file and overlap the indexed soultions from a stream file.
