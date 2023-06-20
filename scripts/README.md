@@ -34,6 +34,8 @@ python reduce_h5_from_stream.py --h5file <h5_input_file> --streamfile <stream_in
 - `--output`: (Optional) Output h5 file path. If not provided, an output file name will be generated based on the stream file name with the pattern <basename>_sparse.h5.
 - `--window_size`: (Optional) Window size for each spot. Default is 15.
 
+`reduce_h5_from_stream_spots.py` is exactly the same, but sparsify the frame by using the strong reflections.
+
 ### cxi_peaks_list.py
 
 This script writes a CXI file with peaks_list from a CrytFEL stream file, and linked HDF5 image data.
