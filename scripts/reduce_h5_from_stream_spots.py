@@ -23,14 +23,15 @@ def process_files(h5_file, stream_file, output_file, window_size):
     indexable_frames = stream.get_indexable_frames()
 
     new_frames = []
-    for idx in tqdm(indexable_frames):
-        original_frame = get_frame(idx, h5_file)
-        new_frame = np.full_like(original_frame, -32768)
-        for point in stream.parsed[idx]['predicted_reflections'][:,:2]:
-            y, x = point.astype(int)
-            new_frame[x-window_size:x+window_size+1, y-window_size:y+window_size+1] = \
-                original_frame[x-window_size:x+window_size+1, y-window_size:y+window_size+1]
-        new_frames.append(new_frame)
+    for idx in tqdm(stream.get_indexable_frames()):
+        if 'peaks' in stream.parsed[idx].keys() :
+            original_frame = get_frame(idx, h5_file)
+            new_frame = np.full_like(original_frame, -32768)
+            for point in stream.parsed[idx]['peaks'][:,:2]:
+                y, x = point.astype(int)
+                new_frame[x-window_size:x+window_size+1, y-window_size:y+window_size+1] = \
+                    original_frame[x-window_size:x+window_size+1, y-window_size:y+window_size+1]
+            new_frames.append(new_frame)
 
     new_frames = np.array(new_frames)
     save_frames_to_h5(new_frames, output_file)
