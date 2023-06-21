@@ -10,12 +10,11 @@ This Python script processes h5 and stream files from crystalline diffraction da
 - hdf5plugin
 - crystfelparser
 - tqdm
-- argparse
 
 You can install all Python dependencies by running:
 
 ```bash
-pip install numpy h5py hdf5plugin tqdm argparse
+pip install numpy h5py hdf5plugin tqdm
 ```
 
 ## Scripts
