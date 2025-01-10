@@ -47,7 +47,7 @@ def stream_to_dictionary(streamfile):
                 line = loop_over_next_N_lines(text_file, 3)
                 ln += 3
                 # save the image index and save it as zero-based
-                im_num = np.int(line.split()[-1]) - 1
+                im_num = int(line.split()[-1]) - 1
                 tmpframe["Image serial number"] = im_num
 
                 # loop over the next 2 lines to see if the indexer worked
@@ -70,7 +70,7 @@ def stream_to_dictionary(streamfile):
                         keyw=""
                         
                 # get the number of peaks
-                num_peaks = np.int(line.split()[-1])
+                num_peaks = int(line.split()[-1])
                 tmpframe["num_peaks"] = num_peaks
 
                 # get the resolution
@@ -133,7 +133,7 @@ def stream_to_dictionary(streamfile):
                     tmpframe["diffraction_resolution_limit [A]"] = np.float(line[5])
 
                     # get the number of predicted reflections
-                    num_reflections = np.int(text_file.readline().split()[-1])
+                    num_reflections = int(text_file.readline().split()[-1])
                     tmpframe["num_predicted_reflections"] = num_reflections
 
                     # skip a few lines

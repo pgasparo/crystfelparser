@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="crystfelparser",
-    version="1.0.0",
+    version="0.0.1",
     description="crystfelparser",
     classifiers=["Development Status :: 2 - Pre-Alpha",
                  "Topic :: Scientific/Engineering :: File processing"],

@@ -6,6 +6,6 @@ RUN git clone https://github.com/pgasparo/crystfelparser
 # update conda
 RUN conda update -n base conda -c anaconda
 
-RUN cd crystfelparser && make
-RUN conda init
+RUN cd crystfelparser && pip install .
+RUN echo 'conda ini' >> ~/.bashrc
 RUN echo 'conda activate crystfelparser' >> ~/.bashrc

@@ -31,7 +31,7 @@ def recursively_save_dict_contents_to_group(h5file, path, dic):
     """
 
     for key, item in dic.items():
-        if isinstance(item, (np.ndarray, np.int, np.float, str, bytes)):
+        if isinstance(item, (np.ndarray, int, float, str, bytes)):
             h5file[path + str(key)] = item
         elif isinstance(item, dict):
             recursively_save_dict_contents_to_group(
