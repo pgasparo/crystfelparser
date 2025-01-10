@@ -76,8 +76,8 @@ def stream_to_dictionary(streamfile):
                 # get the resolution
                 line = text_file.readline()
                 ln += 1
-                tmpframe["peak_resolution [A]"] = np.float(line.split()[-2])
-                tmpframe["peak_resolution [nm^-1]"] = np.float(line.split()[2])
+                tmpframe["peak_resolution [A]"] = float(line.split()[-2])
+                tmpframe["peak_resolution [nm^-1]"] = float(line.split()[2])
 
                 if num_peaks > 0:
                     # skip the first 2 lines
@@ -91,7 +91,7 @@ def stream_to_dictionary(streamfile):
                     # dim1 = ss, dim2 = fs
                     tmpframe["peaks"] = np.asarray(
                         [text_file.readline().split()[:4] for tmpc in range(num_peaks)]
-                    ).astype(np.float)
+                    ).astype(float)
 
                 ##### Get the PREDICTIONS after indexing #####
 
@@ -104,7 +104,7 @@ def stream_to_dictionary(streamfile):
                     line = text_file.readline().split()
                     tmpframe["Cell parameters"] = np.hstack(
                         [line[2:5], line[6:9]]
-                    ).astype(np.float)
+                    ).astype(float)
 
                     # Get the reciprocal unit cell as a 3x3 matrix
                     reciprocal_cell = []
@@ -113,7 +113,7 @@ def stream_to_dictionary(streamfile):
                         ln += 1
                     tmpframe["reciprocal_cell_matrix"] = np.asarray(
                         reciprocal_cell
-                    ).astype(np.float)
+                    ).astype(float)
 
                     # Save the lattice type
                     tmpframe["lattice_type"] = text_file.readline().split()[-1]
@@ -129,8 +129,8 @@ def stream_to_dictionary(streamfile):
                         line = loop_over_next_N_lines(text_file, 1).split()
                         ln += 1
 
-                    tmpframe["diffraction_resolution_limit [nm^-1]"] = np.float(line[2])
-                    tmpframe["diffraction_resolution_limit [A]"] = np.float(line[5])
+                    tmpframe["diffraction_resolution_limit [nm^-1]"] = float(line[2])
+                    tmpframe["diffraction_resolution_limit [A]"] = float(line[5])
 
                     # get the number of predicted reflections
                     num_reflections = int(text_file.readline().split()[-1])
@@ -151,7 +151,7 @@ def stream_to_dictionary(streamfile):
                             ln += 1
                         tmpframe["predicted_reflections"] = np.asarray(
                             reflections_pos
-                        ).astype(np.float)
+                        ).astype(float)
                     # continue reading
                     line = text_file.readline()
                     ln += 1
@@ -271,7 +271,7 @@ class streamfile_parser:
                     elif "photon_energy_eV" in line or "photon_energy" in line:
                         energy_values = [float(i) for i in line.split() if is_number(i)]
                         if energy_values:
-                            photon_energy = 12398.42 / np.float(max(energy_values))
+                            photon_energy = 12398.42 / float(max(energy_values))
                     
                     cell_pattern = re.compile(r"(?P<param>[abc]|al|be|ga)\s*=\s*(?P<value>\d+\.\d+)\s*(?P<unit>[Aa]|[Dd]eg)")
                     if line.startswith("a") or line.startswith("b") or line.startswith("c") or line.startswith("al") or line.startswith("be") or line.startswith("ga"):
@@ -385,7 +385,7 @@ class streamfile_parser:
     #     )
     #     (out, err) = proc.communicate()
     #     out = out.decode("UTF-8")
-    #     photon_energy = 12398.42 / np.float(
+    #     photon_energy = 12398.42 / float(
     #         max([int(i) for i in set(out.split()) if i.isnumeric()])
     #     )
 
@@ -403,7 +403,7 @@ class streamfile_parser:
     #         if len(line) > 1
     #         if line.split()[0] in {"a", "b", "c", "al", "be", "ga"}
     #     ]
-    #     cell = np.array([np.float(line.split()[2]) for line in cellstr])
+    #     cell = np.array([float(line.split()[2]) for line in cellstr])
     #     return abs(posx), abs(posy), nx, ny, clen, photon_energy, cell
 
     def get_indexable_frames(self):
